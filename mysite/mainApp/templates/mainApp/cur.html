@@ -1,0 +1,52 @@
+{% extends "mainApp/wrapper.html" %}
+
+{% block content%}
+ <fieldset>
+         <legend>Конвертер валют</legend>
+         <form id="form">
+            <label for="leftSelector" >Исходная валюта</label>
+            <select id="leftSelector">
+               <option value="0">CZK</option>
+               <option value="1">EUR</option>
+               <option value="2">PLN</option>
+               <option value="3">USD</option>
+            </select>
+            <input type="number" step="0.01" id="amount">
+             <br>
+            <label for="rightSelector">Итоговая валюта</label>
+            <select id="rightSelector">
+               <option value="0">CZK</option>
+               <option value="1">EUR</option>
+               <option value="2">PLN</option>
+               <option value="3">USD</option>
+            </select>
+             <input type="text" disabled id="result" style="background-color:white;color:black"> </input>
+             <br>
+            <button type="submit">
+            Конвертировать
+            </button>
+         </form>
+      </fieldset>
+<span id="err" style="color:red"></span>
+      <script type="text/javascript">
+         function dgI(e){return document.getElementById(e)}
+         dgI("form").onsubmit = function(e){
+         e.preventDefault();
+         var left = dgI("leftSelector");
+         var leftSelected = left.options[left.selectedIndex].value;
+         var right = dgI("rightSelector");
+         var rightSelected = right.options[right.selectedIndex].value;
+         var amount = dgI("amount").value;
+         var xhr = new XMLHttpRequest();
+         xhr.open('GET', `/${leftSelected}/${rightSelected}/${amount}`);
+         xhr.onload = function() {
+         if (xhr.status === 200)
+         dgI('result').value=xhr.responseText;
+         else
+         dgI('err').innerText='Запрос не удалася. HTTP статус ответа ' + xhr.status;
+         };
+         xhr.send();
+         }
+      </script>
+
+{% endblock %}
